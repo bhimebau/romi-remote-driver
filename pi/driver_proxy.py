@@ -11,17 +11,20 @@ def motor_go(arduino_handle,speed_left,speed_right,sleep_sec):
    
 baseboard = AStar()
 sleep_val = 1
-torque = 50
-baseboard.leds(0,0,1)
-while (speed<=300):
-    motor_go(baseboard,speed,speed,sleep_val)
-    speed+=50
-speed-=100
-while (speed>=-300):
-    motor_go(baseboard,speed,speed,sleep_val)
-    speed-=50
-speed+=100
-while (speed<=0):
-    motor_go(baseboard,speed,speed,sleep_val)
-    speed+=50
-baseboard.leds(0,0,0)  
+
+while (1):
+    speed = 50
+    baseboard.leds(0,0,1)
+    while (speed<=300):
+        motor_go(baseboard,speed,speed,sleep_val)
+        speed+=50
+    speed-=100
+    while (speed>=-300):
+        motor_go(baseboard,speed,speed,sleep_val)
+        speed-=50
+    speed+=100
+    while (speed<=0):
+        motor_go(baseboard,speed,speed,sleep_val)
+        speed+=50
+    baseboard.leds(0,0,0)
+    sleep(sleep_val)

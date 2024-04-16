@@ -29,6 +29,8 @@ Romi32U4Encoders encoders;
 int32_t Kp = 450;
 int32_t Kd = 250;
 
+unsigned long time_target = 0;
+
 int32_t speedControllerLeft(int32_t desired_counts) {
   static int32_t torque = 0;
   static int32_t error_last = 0;
@@ -88,6 +90,7 @@ void setup()
 
   // Play startup sound.
   buzzer.play("v10>>g16>>>c16");
+  time_target = micros() + 100000; // Read the number of microseconds since the program started. 
 }
 
 void loop()
@@ -133,10 +136,11 @@ void loop()
   //slave.buffer.leftEncoder = encoders.getCountsLeft();
   //slave.buffer.rightEncoder = encoders.getCountsRight();
 
-  // When you are done WRITING, call finalizeWrites() to make modified
-  // data available to I2C master.
-  speedControllerLeft(slave.buffer.leftMotor);
-  speedControllerRight(slave.buffer.rightMotor);
+1  // data available to I2C master.
+  if (micros() >= time_target) {
+    speedControllerLeft(slave.buffer.leftMotor);
+    speedControllerRight(slave.buffer.rightMotor);
+    time_target = micros() + 100000;
+  }
   slave.finalizeWrites();
-  delay(100);
 }

@@ -6,6 +6,7 @@ import time
 class AStar:
   def __init__(self):
     self.bus = smbus.SMBus(1)
+    time.sleep(1)
 
   def read_unpack(self, address, size, format):
     # Ideally we could do this:
@@ -25,8 +26,12 @@ class AStar:
 
   def write_pack(self, address, format, *data):
     data_array = list(struct.pack(format, *data))
-    self.bus.write_i2c_block_data(20, address, data_array)
+    try:
+      self.bus.write_i2c_block_data(20, address, data_array)
+    except OSError:
+      print("I2C Bus Write Failure")
     time.sleep(0.0001)
+
 
   def leds(self, red, yellow, green):
     self.write_pack(0, 'BBB', red, yellow, green)
@@ -54,4 +59,5 @@ class AStar:
 
   def test_write8(self):
     self.bus.write_i2c_block_data(20, 0, [0,0,0,0,0,0,0,0])
-    time.sleep(0.0001)
+#    time.sleep(0.0001)
+    time.sleep(0.001)
